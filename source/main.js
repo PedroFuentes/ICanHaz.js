@@ -38,7 +38,11 @@
                 ich.templates[name] = templateString;
                 ich[name] = function (data, raw) {
                     data = data || {};
-                    var result = Mustache.to_html(ich.templates[name], data, ich.templates);
+                    if(typeof Mustache === 'object') {
+                        result = Mustache.to_html(ich.templates[name], data, ich.templates);
+                    } else if (typeof Handlebars === 'object') {
+                        result = Handlebars.compile(ich.templates[name])(data, {partials: ich.templates});
+                    }
                     return (ich.$ && !raw) ? ich.$(trim(result)) : result;
                 };
             }
